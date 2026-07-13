@@ -40,7 +40,7 @@ jobs:
         retention-days: 7
 
   publish-server:
-    if: github.repository == 'eclipse-apoapsis/ort-server'
+    if: false
     permissions:
       contents: write
     runs-on: ubuntu-24.04
@@ -148,8 +148,7 @@ jobs:
         retention-days: 7
 
   create-release:
-    # While this job does not really need "publish-server", it is mentioned here to block on failure.
-    needs: [build-cli, release-notes, publish-server]
+    needs: [build-cli, release-notes]
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -170,9 +169,11 @@ jobs:
       shell: bash
       run: |
         cd artifacts
+        ls *
         sha256sum osc-cli-*.{tar.gz,zip} > ../checksums.txt
 
     - name: Create GitHub Release
+      if: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
